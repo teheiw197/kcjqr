@@ -84,14 +84,19 @@ class CourseStorage:
         self.save_data()
 
 @register("kcjqr", "特嘿工作室", "智能课程提醒插件", "1.0.0")
-class CourseReminder(Star):
-    def __init__(self, context: Context):
+class CourseReminderPlugin(Star):
+    def __init__(self, context: Context, config: dict = None):
         super().__init__(context)
-        self.config = self.load_config()
+        self.config = config or self.load_config()
         self.templates = self.load_templates()
         self.storage = CourseStorage(self.config)
         self.reminder_tasks: Dict[str, asyncio.Task] = {}
         self.user_states: Dict[str, str] = {}
+        self.daily_notification_task = None
+        
+        # 启动每日预览任务
+        if self.config.get('reminder', {}).get('enable_daily_preview', True):
+            self.daily_notification_task = asyncio.create_task(self.start_daily_preview())
 
     def load_config(self) -> dict:
         config_path = Path(__file__).parent / 'config.yaml'
@@ -350,4 +355,28 @@ class CourseReminder(Star):
         # 取消所有提醒任务
         for task in self.reminder_tasks.values():
             task.cancel()
-        self.reminder_tasks.clear() 
+        self.reminder_tasks.clear()
+
+    async def start_daily_preview(self):
+        while True:
+            try:
+                now = datetime.now()
+                preview_time = self.config.get('reminder', {}).get('daily_preview_time', '23:00')
+                hour, minute = map(int, preview_time.split(':'))
+                target_time = now.replace(hour=hour, minute=minute, second=0, microsecond=0)
+                
+                if now > target_time:
+                    target_time += timedelta(days=1)
+                
+                wait_seconds = (target_time - now).total_seconds()
+                await asyncio.sleep(wait_seconds)
+                
+                # 发送每日预览
+                for user_id in self.storage.data:
+                    courses = self.storage.get_user_courses(user_id)
+                    if courses:
+                        await self.send_daily_preview(user_id, courses)
+                
+            except Exception as e:
+                logger.error(f"每日预览任务出错: {e}")
+                await asyncio.sleep(60)  # 出错后等待1分钟再重试 

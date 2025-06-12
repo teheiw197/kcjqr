@@ -1,0 +1,78 @@
+{
+  "reminder": {
+    "description": "提醒设置",
+    "type": "object",
+    "items": {
+      "advance_minutes": {
+        "description": "提前提醒时间（分钟）",
+        "type": "int",
+        "default": 30
+      },
+      "daily_preview_time": {
+        "description": "每日预览时间（小时:分钟）",
+        "type": "string",
+        "default": "23:00"
+      },
+      "enable_daily_preview": {
+        "description": "是否启用每日预览",
+        "type": "bool",
+        "default": true
+      }
+    }
+  },
+  "parser": {
+    "description": "课程解析设置",
+    "type": "object",
+    "items": {
+      "enable_ai": {
+        "description": "是否启用AI解析",
+        "type": "bool",
+        "default": false
+      },
+      "ai_provider": {
+        "description": "AI提供商",
+        "type": "string",
+        "options": ["openai", "doubao"],
+        "default": "doubao"
+      },
+      "max_retries": {
+        "description": "最大重试次数",
+        "type": "int",
+        "default": 3
+      }
+    }
+  },
+  "storage": {
+    "description": "数据存储设置",
+    "type": "object",
+    "items": {
+      "type": {
+        "description": "存储类型",
+        "type": "string",
+        "options": ["memory", "file", "database"],
+        "default": "file"
+      },
+      "file_path": {
+        "description": "文件存储路径",
+        "type": "string",
+        "default": "data/plugins/kcjqr/courses.json"
+      }
+    }
+  },
+  "templates": {
+    "description": "消息模板设置",
+    "type": "object",
+    "items": {
+      "enable_custom": {
+        "description": "是否启用自定义模板",
+        "type": "bool",
+        "default": false
+      },
+      "template_path": {
+        "description": "自定义模板路径",
+        "type": "string",
+        "default": "data/plugins/kcjqr/templates"
+      }
+    }
+  }
+} 

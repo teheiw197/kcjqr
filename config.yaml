@@ -1,0 +1,65 @@
+# 课程提醒插件配置
+
+# 提醒设置
+reminder:
+  # 提前提醒时间（分钟）
+  advance_minutes:
+    type: int
+    description: 提前提醒时间（分钟）
+    default: 30
+  # 每日预览时间（小时:分钟）
+  daily_preview_time:
+    type: string
+    description: 每日预览时间（小时:分钟）
+    default: "23:00"
+  # 是否启用每日预览
+  enable_daily_preview:
+    type: bool
+    description: 是否启用每日预览
+    default: true
+
+# 课程解析设置
+parser:
+  # 是否启用AI解析
+  enable_ai:
+    type: bool
+    description: 是否启用AI解析
+    default: false
+  # AI提供商 (openai/doubao)
+  ai_provider:
+    type: string
+    description: AI提供商
+    options: ["openai", "doubao"]
+    default: "doubao"
+  # 最大重试次数
+  max_retries:
+    type: int
+    description: 最大重试次数
+    default: 3
+
+# 数据存储设置
+storage:
+  # 存储类型 (memory/file/database)
+  type:
+    type: string
+    description: 存储类型
+    options: ["memory", "file", "database"]
+    default: "file"
+  # 文件存储路径
+  file_path:
+    type: string
+    description: 文件存储路径
+    default: "data/plugins/kcjqr/courses.json"
+
+# 消息模板设置
+templates:
+  # 是否启用自定义模板
+  enable_custom:
+    type: bool
+    description: 是否启用自定义模板
+    default: false
+  # 自定义模板路径
+  template_path:
+    type: string
+    description: 自定义模板路径
+    default: "data/plugins/kcjqr/templates" 

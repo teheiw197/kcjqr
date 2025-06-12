@@ -83,7 +83,7 @@ class CourseStorage:
         self.data[user_id]['settings'] = settings
         self.save_data()
 
-@register("kcjqr", "特嘿工作室", "智能课程提醒插件", "1.0.0")
+@register("kcjqr", "特嘿工作室", "智能课程提醒插件", "1.0.0", "https://github.com/teheiw197/kcjqr")
 class CourseReminderPlugin(Star):
     def __init__(self, context: Context):
         super().__init__(context)
@@ -360,6 +360,11 @@ class CourseReminderPlugin(Star):
         for task in self.reminder_tasks.values():
             task.cancel()
         self.reminder_tasks.clear()
+        
+        # 取消每日预览任务
+        if self.daily_notification_task:
+            self.daily_notification_task.cancel()
+            self.daily_notification_task = None
 
     async def start_daily_preview(self):
         while True:

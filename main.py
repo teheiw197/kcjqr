@@ -85,9 +85,9 @@ class CourseStorage:
 
 @register("kcjqr", "特嘿工作室", "智能课程提醒插件", "1.0.0")
 class CourseReminderPlugin(Star):
-    def __init__(self, context: Context, config: dict = None):
+    def __init__(self, context: Context):
         super().__init__(context)
-        self.config = config or self.load_config()
+        self.config = self.load_config()
         self.templates = self.load_templates()
         self.storage = CourseStorage(self.config)
         self.reminder_tasks: Dict[str, asyncio.Task] = {}
@@ -213,6 +213,10 @@ class CourseReminderPlugin(Star):
         courses = []
         current_course = {}
         current_weekday = None
+
+        # 检查是否是课程表格式
+        if not any(keyword in text for keyword in ['上课时间', '课程名称', '教师', '上课地点']):
+            return []
 
         for line in text.split('\n'):
             line = line.strip()
